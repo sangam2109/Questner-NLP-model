@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Question Generator</title>
+</head>
+
+<body>
+    <h1>Question Generator</h1>
+
+    <form id="question-form" method="POST">
+        <label for="input-text">Input Text:</label><br>
+        <textarea id="input-text" name="input_text" rows="4" cols="50" required></textarea><br>
+
+        <label for="question-type">Question Type:</label><br>
+        <select id="question-type" name="question_type">
+            <option value="mcq">Multiple Choice Questions</option>
+            <option value="boolean">Boolean Questions</option>
+            <option value="short">Short Questions</option>
+        </select><br>
+
+        <label for="max-questions">Max Questions:</label><br>
+        <input type="number" id="max-questions" name="max_questions" min="1" value="4" required><br><br>
+
+        <button type="submit">Generate Questions</button>
+    </form>
+
+    <div id="questions">
+        <!-- Generated questions will be displayed here -->
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const questionForm = document.getElementById('question-form');
+            const questionsDiv = document.getElementById('questions');
+
+            questionForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                questionsDiv.innerHTML = ''; // Clear previous results
+
+                const formData = new FormData(questionForm);
+                const response = await fetch('/generate_questions', {
+                    method: 'POST',
+                    body: JSON.stringify(Object.fromEntries(formData)),
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    const questions = data.questions;
+
+                    if (questions.length > 0) {
+                        questions.forEach((question, index) => {
+                            questionsDiv.innerHTML += `<p><strong>Question ${index + 1}:</strong> ${question}</p>`;
+                        });
+                    } else {
+                        questionsDiv.innerHTML = '<p>No questions generated.</p>';
+                    }
+                } else {
+                    questionsDiv.innerHTML = '<p>Error generating questions.</p>';
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>
