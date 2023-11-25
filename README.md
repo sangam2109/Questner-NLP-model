@@ -15,9 +15,11 @@ QuestGenerator NLP is a natural language processing (NLP) based question generat
    git clone https://github.com/sangam2109/Questner-NLP-model.git && Questner-NLP-model
 
 2. Install Dependencies:
-    ```pip install -r requirements.txt
+    ```bash
+    pip install -r requirements.txt
 3. Run the Application:
-    ```python app.py
+    ```bash
+    python app.py
 
 
 ## Example
